@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Heart's Letter to You</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Montserrat:wght@300;400;600&display=swap');
+        
+        :root {
+            --primary: #ff6b81;
+            --secondary: #ff4757;
+            --light: #fff6f6;
+            --dark: #2f3542;
+            --accent: #ff9ff3;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            background-color: var(--light);
+            font-family: 'Montserrat', sans-serif;
+            color: var(--dark);
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 155, 243, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 107, 129, 0.1) 0%, transparent 20%);
+            min-height: 100vh;
+            touch-action: manipulation;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+        }
+        
+        .envelope-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            height: 300px;
+            margin: 3rem auto;
+            perspective: 1000px;
+        }
+        
+        .envelope {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+        }
+        
+        .envelope-front {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(255, 107, 129, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+            transform-origin: top;
+            backface-visibility: hidden;
+        }
+        
+        .envelope-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            border-radius: 8px;
+            z-index: 1;
+        }
+        
+        .heart-seal {
+            width: 60px;
+            height: 60px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .heart {
+            width: 30px;
+            height: 30px;
+            background-color: var(--primary);
+            transform: rotate(45deg);
+            position: relative;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .heart:before, .heart:after {
+            content: '';
+            width: 30px;
+            height: 30px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            position: absolute;
+        }
+        
+        .heart:before {
+            top: -15px;
+            left: 0;
+        }
+        
+        .heart:after {
+            top: 0;
+            left: -15px;
+        }
+        
+        .letter {
+            position: absolute;
+            width: 95%;
+            height: 280px;
+            background-color: white;
+            border-radius: 5px;
+            padding: 2rem;
+            z-index: 0;
+            bottom: 0;
+            left: 2.5%;
+            transform: translateY(100%);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.8s ease;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .envelope.open {
+            transform: translateY(50px);
+        }
+        
+        .envelope.open .envelope-front {
+            transform: rotateX(180deg);
+        }
+        
+        .envelope.open .letter {
+            transform: translateY(0);
+        }
+        
+        .letter-content {
+           
+            font-size: 1.4rem;
+            line-height: 1.6;
+            color: #555;
+        }
+        
+        .signature {
+            margin-top: 2rem;
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            color: var(--primary);
+            text-align: right;
+        }
+        
+        .floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .heart-particle {
+            position: absolute;
+            opacity: 0;
+            font-size: 1.5rem;
+            color: var(--primary);
+            animation: float 5s ease-in infinite;
+        }
+        
+        .title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--primary);
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .instructions {
+            text-align: center;
+            margin-top: 1rem;
+            color: #666;
+            font-style: italic;
+            animation: fadeInOut 3s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: rotate(45deg) scale(1); }
+            50% { transform: rotate(45deg) scale(1.1); }
+            100% { transform: rotate(45deg) scale(1); }
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes fadeInOut {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .envelope-wrapper {
+                height: 250px;
+                margin: 1.5rem auto;
+            }
+            
+            .letter {
+                height: 230px;
+                padding: 1.5rem;
+            }
+            
+            .letter-content {
+                font-size: 1.2rem;
+            }
+            
+            .title {
+                font-size: 2.5rem;
+            }
+            
+            .signature {
+                font-size: 1.8rem;
+                margin-top: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .envelope-wrapper {
+                height: 200px;
+            }
+            
+            .letter {
+                height: 180px;
+                padding: 1rem;
+            }
+            
+            .letter-content {
+                font-size: 1rem;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            .heart-seal {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .heart {
+                width: 25px;
+                height: 25px;
+            }
+            
+            .heart:before, .heart:after {
+                width: 25px;
+                height: 25px;
+            }
+            
+            .heart:before {
+                top: -12.5px;
+            }
+            
+            .heart:after {
+                left: -12.5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-hearts" id="hearts-container"></div>
+    
+    <div class="container">
+        <h1 class="title">To My Beloved</h1>
+        
+        <div class="envelope-wrapper">
+            <div class="envelope" id="envelope">
+                <div class="envelope-front">
+                    <div class="heart-seal">
+                        <div class="heart"></div>
+                    </div>
+                </div>
+                <div class="envelope-back"></div>
+                <div class="letter">
+                    <div class="letter-content">
+                        <p>My shree💝,</p>
+                        <p>Some bonds are beyond explanations, beyond words, beyond the ordinary definitions of love and friendship. Tum meri zindagi ke woh haseen lamhe ho jo sirf yaadon mein nahi, meri har saans mein base hain. Tumse judi har baat, har hasi, har unsuni baat... sab kuchh mere dil ke kisi gehre kone mein hamesha zinda rahti hai.</p>
+                        <p>कभी-कभी कोई अपना इतना अपना लगता है, कि उसकी गैरमौजूदगी भी पास होने का एहसास दिलाती है।
+                        </p>
+                        <p>Tum meri zindagi ka woh hissa ho jo sirf waqt ke saath nahi badalta, balki har din aur gehra hota chala jata hai. Tum meri har khushi ka sabab ho, meri har udaasi ka sahara ho. Agar kabhi duniya mujhe samajhne mein nakam ho jaaye, toh bhi mujhe pata hai... ek insaan hai jo bina kahe sab kuchh samajh lega.
+                        </p>
+                        <p>Yeh rishta kisi shabd ka mohtaaj nahi hai, kisi paribhasha mein bandh nahi sakta... bas ek mehsoos hai jo dil ke har dhaadkan ke saath jeeta hai. Tum mere liye sirf ek naam, ek shaks nahi... ek poori kahani ho, jo meri rooh tak utar chuki hai.
+                        </p>
+                        <p>
+                            Meri har dua mein tum ho, meri har kahani mein tum ho. Jo bhi ho, jahan bhi ho... bas itna yaad rakhna-tum meri duniya ka sabse khoobsurat hissa ho..!! 💝💖✨</p>
+                        <p>Forever yours,</p>
+                    </div>
+                    <div class="signature" id="signature">Me</div>
+                </div>
+            </div>
+        </div>
+        
+        <p class="instructions">Click the envelope to open my heart</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const envelope = document.getElementById('envelope');
+            const signature = document.getElementById('signature');
+            const heartsContainer = document.getElementById('hearts-container');
+            
+            // Open/close envelope
+            envelope.addEventListener('click', function() {
+                this.classList.toggle('open');
+                
+                if (this.classList.contains('open')) {
+                    createHearts();
+                    animateSignature();
+                }
+            });
+            
+            // Touch support for mobile
+            envelope.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                this.classList.toggle('open');
+                
+                if (this.classList.contains('open')) {
+                    createHearts();
+                    animateSignature();
+                }
+            }, {passive: false});
+            
+            // Animate signature
+            function animateSignature() {
+                const names = ["Yours truly", "With love", "Forever yours", "All my love", "Eternally", "Yours completely"];
+                let counter = 0;
+                
+                const interval = setInterval(() => {
+                    signature.textContent = names[counter % names.length];
+                    counter++;
+                    
+                    if (counter >= names.length * 2) {
+                        clearInterval(interval);
+                        signature.textContent = "Me";
+                    }
+                }, 300);
+            }
+            
+            // Create floating hearts
+            function createHearts() {
+                // Clear previous hearts
+                heartsContainer.innerHTML = '';
+                
+                // Create new hearts
+                const heartCount = window.innerWidth < 768 ? 15 : 25;
+                
+                for (let i = 0; i < heartCount; i++) {
+                    setTimeout(() => {
+                        const heart = document.createElement('div');
+                        heart.innerHTML = '❤';
+                        heart.classList.add('heart-particle');
+                        
+                        // Random position and animation duration
+                        const leftPos = Math.random() * 100;
+                        const animDuration = 3 + Math.random() * 4;
+                        const delay = Math.random() * 5;
+                        const size = window.innerWidth < 768 ? 
+                            (1 + Math.random() * 1.5) : 
+                            (1.5 + Math.random() * 2);
+                        
+                        heart.style.left = `${leftPos}%`;
+                        heart.style.animationDuration = `${animDuration}s`;
+                        heart.style.animationDelay = `${delay}s`;
+                        heart.style.fontSize = `${size}rem`;
+                        
+                        heartsContainer.appendChild(heart);
+                    }, i * 150);
+                }
+            }
+            
+            // Initial small floating hearts in background
+            function createBackgroundHearts() {
+                const heartInterval = window.innerWidth < 768 ? 1200 : 800;
+                
+                setInterval(() => {
+                    const heart = document.createElement('div');
+                    heart.innerHTML = '❤';
+                    heart.classList.add('heart-particle');
+                    
+                    const leftPos = Math.random() * 100;
+                    const animDuration = 10 + Math.random() * 10;
+                    const delay = Math.random() * 5;
+                    const size = window.innerWidth < 768 ? 
+                        (0.5 + Math.random() * 0.8) : 
+                        (0.8 + Math.random() * 1.2);
+                    const opacity = 0.2 + Math.random() * 0.3;
+                    
+                    heart.style.left = `${leftPos}%`;
+                    heart.style.animationDuration = `${animDuration}s`;
+                    heart.style.animationDelay = `${delay}s`;
+                    heart.style.fontSize = `${size}rem`;
+                    heart.style.opacity = opacity;
+                    heart.style.color = `rgba(255, 107, 129, ${0.3 + Math.random() * 0.7})`;
+                    
+                    heartsContainer.appendChild(heart);
+                    
+                    // Remove heart after animation completes
+                    setTimeout(() => {
+                        heart.remove();
+                    }, animDuration * 1000);
+                }, heartInterval);
+            }
+            
+            createBackgroundHearts();
+        });
+    </script>
+</body>
+</html>
